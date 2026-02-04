@@ -1,50 +1,23 @@
 let balance = 0;
-const transactions = [];
 
-const amountInput = document.getElementById("amount");
-const balanceDisplay = document.getElementById("balanceDisplay");
-const depositBtn = document.getElementById("depositBtn");
-const withdrawBtn = document.getElementById("withdrawBtn");
-const transactionList = document.getElementById("transactionList");
+function deposit() {
+  let amount = Number(document.getElementById("amount").value);
 
-function updateBalance() {
-  balanceDisplay.textContent = `$${balance.toFixed(2)}`;
-}
-
-function addTransaction(type, amount) {
-  transactions.push({ type, amount });
-  displayTransactions();
-}
-
-function displayTransactions() {
-  transactionList.innerHTML = "";
-  transactions.forEach((transaction) => {
-    const li = document.createElement("li");
-    li.className = `transaction ${transaction.type.toLowerCase()}`;
-    li.textContent = `${transaction.type}: $${transaction.amount.toFixed(2)}`;
-    transactionList.appendChild(li);
-  });
-}
-
-depositBtn.addEventListener("click", function () {
-  const amount = parseFloat(amountInput.value);
-
-  if (isNaN(amount) || amount <= 0) {
-    alert("Please enter a valid amount");
+  if (amount <= 0) {
+    alert("Enter valid amount");
     return;
   }
 
   balance += amount;
-  addTransaction("Deposit", amount);
   updateBalance();
-  amountInput.value = "";
-});
+  addHistory(`Deposited ₹${amount}`);
+}
 
-withdrawBtn.addEventListener("click", function () {
-  const amount = parseFloat(amountInput.value);
+function withdraw() {
+  let amount = Number(document.getElementById("amount").value);
 
-  if (isNaN(amount) || amount <= 0) {
-    alert("Please enter a valid amount");
+  if (amount <= 0) {
+    alert("Enter valid amount");
     return;
   }
 
@@ -54,9 +27,17 @@ withdrawBtn.addEventListener("click", function () {
   }
 
   balance -= amount;
-  addTransaction("Withdraw", amount);
   updateBalance();
-  amountInput.value = "";
-});
+  addHistory(`Withdrawn ₹${amount}`);
+}
 
-updateBalance();
+function updateBalance() {
+  document.getElementById("balance").innerText = balance;
+  document.getElementById("amount").value = "";
+}
+
+function addHistory(message) {
+  let li = document.createElement("li");
+  li.innerText = message;
+  document.getElementById("history").appendChild(li);
+}
